@@ -1,35 +1,97 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [form, setForm] = useState({
+    place: "",
+    name: "",
+    age: "",
+  });
+
+  const [people, setPeople] = useState([]);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleAdd = () => {
+    if (!form.place || !form.name || !form.age) return;
+
+    setPeople([...people, form]);
+    setForm({ place: "", name: "", age: "" });
+  };
+
+  const handleRemove = (index) => {
+    const updated = people.filter((_, i) => i !== index);
+    setPeople(updated);
+  };
+
+  const handleClear = () => {
+    setPeople([]);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div style={{ padding: 20 }}>
+      <h1>Add People to Table</h1>
+
+      <input
+        name="place"
+        placeholder="Place"
+        value={form.place}
+        onChange={handleChange}
+      />
+
+      <input
+        name="name"
+        placeholder="Name"
+        value={form.name}
+        onChange={handleChange}
+      />
+
+      <input
+        name="age"
+        placeholder="Age"
+        type="number"
+        value={form.age}
+        onChange={handleChange}
+      />
+
+      <div style={{ marginTop: 10 }}>
+        <button onClick={handleAdd}>Add</button>
+        <button onClick={handleClear}>Clear</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+
+      <div style={{ marginTop: 20 }}>
+        {people.length === 0 ? (
+          <p>No entries yet</p>
+        ) : (
+          <table border="1" cellPadding="5">
+            <thead>
+              <tr>
+                <th>Place</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {people.map((p, i) => (
+                <tr key={i}>
+                  <td>{p.place}</td>
+                  <td>{p.name}</td>
+                  <td>{p.age}</td>
+                  <td>
+                    <button onClick={() => handleRemove(i)}>
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
