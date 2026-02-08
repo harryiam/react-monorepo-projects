@@ -1,35 +1,88 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [form, setForm] = useState({
+    name: "",
+    username: "",
+    college: "",
+    email: "",
+    password: "",
+    address: ""
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const validate = () => {
+    const err = {};
+
+    if (!form.name.trim()) {
+      err.name = "Name is required";
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+      err.email = "Enter a valid email address";
+    }
+
+    if (form.password.length < 8) {
+      err.password = "Password must be at least 8 characters";
+    }
+
+    setErrors(err);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    validate();
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div style={{ padding: 20 }}>
+      <h1>Student Registration Form</h1>
 
-export default App
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Name</label><br/>
+          <input name="name" onChange={handleChange} />
+          {errors.name && <p>{errors.name}</p>}
+        </div>
+
+        <div>
+          <label>Username</label><br/>
+          <input name="username" onChange={handleChange} />
+        </div>
+
+        <div>
+          <label>College</label><br/>
+          <input name="college" onChange={handleChange} />
+        </div>
+
+        <div>
+          <label>Email</label><br/>
+          <input name="email" onChange={handleChange} />
+          {errors.email && <p>{errors.email}</p>}
+        </div>
+
+        <div>
+          <label>Password</label><br/>
+          <input
+            name="password"
+            type="password"
+            onChange={handleChange}
+          />
+          {errors.password && <p>{errors.password}</p>}
+        </div>
+
+        <div>
+          <label>Address</label><br/>
+          <input name="address" onChange={handleChange} />
+        </div>
+
+        <button type="submit">Register</button>
+      </form>
+    </div>
+  );
+}
